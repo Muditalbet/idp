@@ -1,0 +1,41 @@
+{
+  "name": "idp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal Developer Platform on Kubernetes — self-service portal that auto-provisions namespace, CI/CD, DNS and observability.",
+  "license": "MIT",
+  "packageManager": "npm@10.9.3",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "teardown": "node scripts/teardown.mjs",
+    "dev": "turbo run dev",
+    "dev:all": "concurrently -n api,worker,portal -c blue,magenta,green \"npm:dev:api\" \"npm:dev:worker\" \"npm:dev:portal\"",
+    "dev:api": "npm run -w @idp/api dev",
+    "dev:worker": "npm run -w @idp/worker dev",
+    "dev:portal": "npm run -w @idp/portal dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:generate": "npm run -w @idp/shared db:generate",
+    "db:migrate": "npm run -w @idp/shared db:migrate",
+    "db:deploy": "npm run -w @idp/shared db:deploy",
+    "db:seed": "npm run -w @idp/shared db:seed",
+    "db:studio": "npm run -w @idp/shared db:studio",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "turbo": "~2.8.3",
+    "typescript": "^5.7.2",
+    "prettier": "^3.4.2"
+  }
+}
