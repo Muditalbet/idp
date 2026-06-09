@@ -1,0 +1,40 @@
+# Stateful dependencies for the IDP control plane.
+# The local image registry is NOT here — it must join the kind docker network,
+# so `scripts/setup.mjs` manages it directly (official kind local-registry pattern).
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: idp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-idp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-idp}
+      POSTGRES_DB: ${POSTGRES_DB:-idp}
+    ports:
+      - "5432:5432"
+    volumes:
+      - idp-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-idp} -d ${POSTGRES_DB:-idp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: idp-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - idp-redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  idp-pgdata:
+  idp-redisdata:
