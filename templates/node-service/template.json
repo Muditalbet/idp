@@ -1,0 +1,15 @@
+{
+  "id": "node-service",
+  "name": "Node.js HTTP Service",
+  "description": "Express service with /healthz, /metrics (Prometheus) and a Dockerfile — ready for the IDP to build and deploy.",
+  "language": "TypeScript",
+  "defaultPort": 8080,
+  "tags": ["express", "rest", "prometheus", "docker"],
+  "skeleton": "../../examples/sample-service",
+  "parameters": [
+    { "name": "name", "type": "string", "required": true, "description": "Service display name" },
+    { "name": "repoUrl", "type": "string", "required": true, "description": "Git repository the pipeline builds from" },
+    { "name": "containerPort", "type": "number", "default": 8080 },
+    { "name": "environments", "type": "string[]", "default": ["dev"] }
+  ]
+}

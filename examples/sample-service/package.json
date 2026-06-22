@@ -1,0 +1,14 @@
+{
+  "name": "sample-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo service deployed by the IDP — Express + Prometheus metrics.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "prom-client": "^15.1.3"
+  }
+}
