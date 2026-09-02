@@ -172,6 +172,13 @@ back too.
 **5 · Look behind the curtain.** Sign in as `admin@idp.local` for cluster nodes, environment
 health rollups, and an audit log of every action the platform took.
 
+Running the test suite needs none of the above — `npm test` exercises the whole API against an
+in-memory stand-in for Postgres, Redis and Kubernetes:
+
+```bash
+npm test    # 82 API tests + the manifest builders, no cluster required
+```
+
 Longer script, including wiring a **real `git push → deploy`** webhook through
 [smee](https://smee.io): **[docs/DEMO.md](docs/DEMO.md)**.
 
@@ -186,7 +193,7 @@ apps/
   portal/    Next.js developer portal (App Router, Tailwind, Recharts)
 packages/
   shared/    Prisma schema + client, Redis event bus, BullMQ queues, K8s client,
-             and the manifest builders (the only unit-tested bit — they're pure functions)
+             and the manifest builders
 templates/
   node-service/     scaffolder template
 examples/
@@ -212,8 +219,10 @@ knowingly left on the floor:
   with proper isolation. This one runs `docker build` on the host and pushes to `localhost:5001`.
 - **Secrets are `.env` files.** No Vault, no sealed secrets, no rotation.
 - **Two roles.** `developer` and `platform-admin`, scoped by team. Nothing finer-grained.
-- **Test coverage is thin.** The manifest builders are unit-tested because they're pure; the
-  loops are verified by running the demo, which is exactly as rigorous as it sounds.
+- **The control loops aren't unit-tested.** The API surface is (82 tests, an in-memory stand-in
+  for Postgres/Redis/Kubernetes) and so are the manifest builders, but the provisioner,
+  reconciler, pipeline and scraper are verified by running the demo — which is exactly as
+  rigorous as it sounds.
 
 If I kept going: policy-as-code on claims (OPA/Kyverno), progressive delivery in the reconciler,
 proper build isolation, and cost attribution per namespace.
